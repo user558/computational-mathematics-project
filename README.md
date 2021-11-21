@@ -1,2 +1,2 @@
-# computational-mathematics-project
+# Computational-mathematics-project
 Decompositions in word embeddings
