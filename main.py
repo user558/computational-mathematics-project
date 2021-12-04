@@ -48,8 +48,15 @@ U, s, Vh = linalg.svd(vectors, full_matrices=True)
 print(U.shape, s.shape, Vh.shape, vocab.shape)
 plt.plot(s)
 
+#Визуализация для full svd
+embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, random_state=12).fit_transform(U[:,:10])
+plt.figure(figsize=(7,5))
+plt.scatter(embedding[:, 0], embedding[:, 1],c = newsgroups_train.target,s = 10)
+print(newsgroups_train.target.shape)
+plt.show()
+
 #Запустим reduced SVD(разложение написать самим)
-U, s, Vh = linalg.svd(vectors, full_matrices=False)
+U1, s1, Vh1 = linalg.svd(vectors, full_matrices=False)
 print(U.shape, s.shape, Vh.shape, vocab.shape)
 plt.plot(s)
 
@@ -61,9 +68,24 @@ plt.plot(s)
 #   return [' '.join(t) for t in topic_words]
 #show_topics(Vh[:5])
 
-#Визуализация
-embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, random_state=12).fit_transform(U[:,:10])
+
+#Визуализация для reduced SVD
+embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, random_state=12).fit_transform(U1[:,:10])
 plt.figure(figsize=(7,5))
 plt.scatter(embedding[:, 0], embedding[:, 1],c = newsgroups_train.target,s = 10)
+print(newsgroups_train.target.shape)
+plt.show()
+
+#Запустим randomized SVD
+from sklearn import decomposition
+%time u_rand, s_rand, v_rand = decomposition.randomized_svd(vectors, 10)
+print(u_rand.shape,s_rand.shape,v_rand.shape)
+print()
+
+#Визуализация для randomized SVD
+import umap.umap_ as umap
+embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, random_state=12).fit_transform(u_rand)
+plt.figure(figsize=(7,5))
+plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
 print(newsgroups_train.target.shape)
 plt.show()
