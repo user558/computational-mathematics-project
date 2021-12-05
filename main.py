@@ -10,7 +10,6 @@ from nltk.stem import WordNetLemmatizer
 import re
 import umap.umap_ as umap
 
-
 #Загрузим данные из Usenet(Новости по 20-ти темам)
 #//scikit-learn.org/0.19/datasets/twenty_newsgroups.html
 categories = ['sci.electronics' , 'alt.atheism','comp.graphics', 'sci.space']
@@ -38,29 +37,13 @@ class LemmaTokenizer(object):
 vectorizer = CountVectorizer(tokenizer=LemmaTokenizer(),lowercase=True,max_df = 0.9,min_df =5)
 vectors = vectorizer.fit_transform(newsgroups_train.data).todense()
 #vectors.shape
+
+#Проверим работу CountVectorizer
 vocab = np.array(vectorizer.get_feature_names())
 print(vocab.shape)
 vocab[3000:3050]
 
-
-#Запустим full SVD(разложение написать самим)
-U, s, Vh = linalg.svd(vectors, full_matrices=True)
-print(U.shape, s.shape, Vh.shape, vocab.shape)
-plt.plot(s)
-
-#Визуализация для full svd
-embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, random_state=12).fit_transform(U[:,:10])
-plt.figure(figsize=(7,5))
-plt.scatter(embedding[:, 0], embedding[:, 1],c = newsgroups_train.target,s = 10)
-print(newsgroups_train.target.shape)
-plt.show()
-
-#Запустим reduced SVD(разложение написать самим)
-U1, s1, Vh1 = linalg.svd(vectors, full_matrices=False)
-print(U.shape, s.shape, Vh.shape, vocab.shape)
-plt.plot(s)
-
-#Теперь мы можем получить 5 самых популярных тем (ограничение:они содержат только топ-7 популярных слов)
+#Продолжение проверки.Получим 5 самых популярных тем (ограничение:они содержат только топ-7 популярных слов)
 #num_top_words=7
 #def show_topics(a):
 #    top_words = lambda t: [vocab[i] for i in np.argsort(t)[:-num_top_words-1:-1]]
@@ -69,12 +52,36 @@ plt.plot(s)
 #show_topics(Vh[:5])
 
 
-#Визуализация для reduced SVD
-embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, random_state=12).fit_transform(U1[:,:10])
-plt.figure(figsize=(7,5))
-plt.scatter(embedding[:, 0], embedding[:, 1],c = newsgroups_train.target,s = 10)
-print(newsgroups_train.target.shape)
+#Запустим full SVD(разложение написать самим)
+U, s, Vh = linalg.svd(vectors, full_matrices=True)
+print(U.shape, s.shape, Vh.shape, vocab.shape)
+plt.plot(s)
+
+#Визуализация для full svd
+import umap.umap_ as umap
+embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(U[:,:5])
+print(embedding.shape)
+plt.figure(figsize=(10,10))
+plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
+print(newsgroups_train.target_names)
 plt.show()
+
+#Запустим reduced SVD(разложение написать самим)
+U1, s1, Vh1 = linalg.svd(vectors, full_matrices=False)
+print(U.shape, s.shape, Vh.shape, vocab.shape)
+plt.plot(s)
+
+
+#Визуализация для reduced SVD
+import umap.umap_ as umap
+embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(U1[:,:5])
+plt.figure(figsize=(10,10))
+plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
+print(newsgroups_train.target_names)
+plt.show()
+
+print(embedding.shape)
+print(newsgroups_train.target_names)
 
 #Запустим randomized SVD
 from sklearn import decomposition
@@ -84,8 +91,10 @@ print()
 
 #Визуализация для randomized SVD
 import umap.umap_ as umap
-embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, random_state=12).fit_transform(u_rand)
-plt.figure(figsize=(7,5))
+embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(u_rand)
+plt.figure(figsize=(10,10))
 plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
-print(newsgroups_train.target.shape)
 plt.show()
+
+print(embedding.shape)
+print(newsgroups_train.target_names)
