@@ -63,6 +63,7 @@ embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transf
 print(embedding.shape)
 plt.figure(figsize=(10,10))
 plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
+plt.title("Full SVD")
 print(newsgroups_train.target_names)
 plt.show()
 
@@ -72,11 +73,12 @@ print(U.shape, s.shape, Vh.shape, vocab.shape)
 plt.plot(s)
 
 
-#Визуализация для reduced SVD
+#Визуализация для truncated SVD
 import umap.umap_ as umap
 embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(U1[:,:5])
 plt.figure(figsize=(10,10))
 plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
+plt.title("Truncated SVD")
 print(newsgroups_train.target_names)
 plt.show()
 
@@ -85,7 +87,7 @@ print(newsgroups_train.target_names)
 
 #Запустим randomized SVD
 from sklearn import decomposition
-%time u_rand, s_rand, v_rand = decomposition.randomized_svd(vectors, 10)
+u_rand, s_rand, v_rand = decomposition.randomized_svd(vectors, 10)
 print(u_rand.shape,s_rand.shape,v_rand.shape)
 print()
 
@@ -94,7 +96,9 @@ import umap.umap_ as umap
 embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(u_rand)
 plt.figure(figsize=(10,10))
 plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
+plt.title("Randomized SVD")
 plt.show()
 
 print(embedding.shape)
 print(newsgroups_train.target_names)
+
