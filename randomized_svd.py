@@ -55,8 +55,8 @@ def Q_QR(A):
         v = u / np.linalg.norm(u)
         Q_cnt = np.identity(r)
         Q_cnt[cnt:, cnt:] -= 2.0 * np.outer(v, v)
-        R = np.dot(Q_cnt, R) # R=H(n-1)*...*H(2)*H(1)*A
-        Q = np.dot(Q, Q_cnt) # Q = H (N-1) * ... * H (2) * H (1) H
+        R = np.dot(Q_cnt, R) # R = P(r-1)*...*P(2)*P(0)*A
+        Q = np.dot(Q, Q_cnt) # Q = P(0) *P(2)*...*P(r-1)
     return Q
 
 A = np.array([[3,4,3],[1,2,3],[4,2,1]])
