@@ -53,7 +53,7 @@ vocab[3000:3050]
 #show_topics(Vh[:5])
 
 
-#Запустим full SVD(разложение написать самим)
+#Запустим full SVD
 U, s, Vh = linalg.svd(vectors, full_matrices=True)
 print(U.shape, s.shape, Vh.shape, vocab.shape)
 plt.plot(s)
@@ -68,7 +68,7 @@ plt.title("Full SVD")
 print(newsgroups_train.target_names)
 plt.show()
 
-#Запустим reduced SVD(разложение написать самим)
+#Запустим reduced SVD
 U1, s1, Vh1 = linalg.svd(vectors, full_matrices=False)
 print(U.shape, s.shape, Vh.shape, vocab.shape)
 plt.plot(s)
