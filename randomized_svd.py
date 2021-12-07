@@ -6,7 +6,7 @@ import numpy as np
 # Параметр n_oversamples - Дополнительное количество случайных векторов для случайной выборки для обеспечения дальнейшей обработки
 # return - U, S и Vt как в усеченном SVD.
 
-def rsvd(A, rank, n_oversamples=None):
+def rand_svd(A, rank, n_oversamples=None):
 
     if n_oversamples is None:
         n_samples = 2 * rank
@@ -14,7 +14,7 @@ def rsvd(A, rank, n_oversamples=None):
         n_samples = rank + n_oversamples
 
 # Шаг 1
-    Q = find_range(A, n_samples)
+    Q = find_Q(A, n_samples)
 
 # Шаг 2
     B = Q.T @ A
@@ -29,7 +29,7 @@ def rsvd(A, rank, n_oversamples=None):
     return U, S, Vt
 
 
-def find_range(A, n_samples):
+def find_Q(A, n_samples):
 # Дана матрица A и число выборок, вычисляет ортогональную матрицу, которая приближает ранг A.
 # Параметр А - Матрица m x n.
 # Параметр n_samples - Число гауссовских случайных выборок.
@@ -60,5 +60,5 @@ def Q_QR(A):
     return Q
 
 A = np.array([[3,4,3],[1,2,3],[4,2,1]])
-U, D, VT = rsvd(A,3)
+U, D, VT = rand_svd(A,3)
 print(U)
