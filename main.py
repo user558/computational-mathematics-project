@@ -9,6 +9,7 @@ from nltk import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import re
 import umap.umap_ as umap
+from randomized_svd.py import rand_svd
 
 #Загрузим данные из Usenet(Новости по 20-ти темам)
 #//scikit-learn.org/0.19/datasets/twenty_newsgroups.html
@@ -87,7 +88,7 @@ print(newsgroups_train.target_names)
 
 #Запустим randomized SVD
 from sklearn import decomposition
-u_rand, s_rand, v_rand = decomposition.randomized_svd(vectors, 10)
+u_rand, s_rand, v_rand = rand_svd(vectors, 10)
 print(u_rand.shape,s_rand.shape,v_rand.shape)
 print()
 
