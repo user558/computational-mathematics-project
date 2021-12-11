@@ -10,6 +10,9 @@ from nltk.stem import WordNetLemmatizer
 import re
 import umap.umap_ as umap
 from randomized_svd.py import rand_svd
+from sklearn.feature_extraction import stop_words
+import umap.umap_ as umap
+from sklearn import decomposition
 
 #Загрузим данные из Usenet(Новости по 20-ти темам)
 #//scikit-learn.org/0.19/datasets/twenty_newsgroups.html
@@ -20,7 +23,6 @@ newsgroups_test = fetch_20newsgroups(subset='test', categories=categories, remov
 #newsgroups_train.filenames.shape, newsgroups_train.target.shape
 
 #Стоп слова(общие термины)
-from sklearn.feature_extraction import stop_words
 sorted(list(stop_words.ENGLISH_STOP_WORDS))[:20]
 
 #Предварительная обработка данных
@@ -58,8 +60,8 @@ U, s, Vh = linalg.svd(vectors, full_matrices=True)
 print(U.shape, s.shape, Vh.shape, vocab.shape)
 plt.plot(s)
 
+
 #Визуализация для full svd
-import umap.umap_ as umap
 embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(U[:,:5])
 print(embedding.shape)
 plt.figure(figsize=(10,10))
@@ -75,7 +77,6 @@ plt.plot(s)
 
 
 #Визуализация для truncated SVD
-import umap.umap_ as umap
 embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(U1[:,:5])
 plt.figure(figsize=(10,10))
 plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
@@ -83,23 +84,18 @@ plt.title("Truncated SVD")
 print(newsgroups_train.target_names)
 plt.show()
 
-print(embedding.shape)
-print(newsgroups_train.target_names)
 
 #Запустим randomized SVD
-from sklearn import decomposition
 u_rand, s_rand, v_rand = rand_svd(vectors, 10)
 print(u_rand.shape,s_rand.shape,v_rand.shape)
 print()
 
+
 #Визуализация для randomized SVD
-import umap.umap_ as umap
 embedding = umap.UMAP(n_neighbors=150, min_dist=0.5, metric='cosine').fit_transform(u_rand)
 plt.figure(figsize=(10,10))
 plt.scatter(embedding[:, 0], embedding[:, 1], c = newsgroups_train.target,s = 10 )
 plt.title("Randomized SVD")
 plt.show()
-
-print(embedding.shape)
 print(newsgroups_train.target_names)
 
